@@ -1,0 +1,24 @@
+{
+  "Images": [
+    ".jpg",
+    ".jpeg",
+    ".heic",
+    ".bmp",
+    ".gif",
+    ".png",
+    ".heic",
+    ".aae"
+  ],
+  "Videos": [
+    ".mp4",
+    ".avi",
+    ".mov",
+    ".3gp",
+    ".ts"
+  ],
+  "Audios": [
+    ".wav",
+    ".mp3",
+    ".flac"
+  ]
+}
