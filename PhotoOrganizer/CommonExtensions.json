@@ -7,7 +7,8 @@
     ".gif",
     ".png",
     ".heic",
-    ".aae"
+    ".aae",
+    ".nef"
   ],
   "Videos": [
     ".mp4",
