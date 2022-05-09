@@ -88,7 +88,16 @@ namespace PhotoOrganizer.Services
             _logService.Info($"Copying files to directory..");
             WorkInParallel(fileInformationDictionary.Values.ToArray(), file =>
             {
-                var date = file.PhotoTaken ?? file.CreationTime;
+                DateTime date = default; 
+                if (file.PhotoTaken.HasValue)
+                {
+                    date = file.PhotoTaken.Value;
+                }
+                else
+                {
+                    date = file.CreationTime < file.LastWriteTime ? file.CreationTime : file.LastWriteTime;
+                }
+
                 var ext = Path.GetExtension(file.Path).ToLowerInvariant();
                 var parentFolderName = "others";
 
@@ -179,29 +188,8 @@ namespace PhotoOrganizer.Services
                 Path = path,
                 CreationTime = fileInfo.CreationTime,
                 LastWriteTime = fileInfo.LastWriteTime,
-                PhotoTaken = GetDateTakenFromImage(path)
+                PhotoTaken = path.GetPhotoTaken()
             };
-        }
-
-        // https://stackoverflow.com/questions/180030/how-can-i-find-out-when-a-picture-was-actually-taken-in-c-sharp-running-on-vista
-        DateTime? GetDateTakenFromImage(string path)
-        {
-            try
-            {
-                using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
-                using (var image = Image.FromStream(fileStream, false, false))
-                {
-                    var propItem = image.GetPropertyItem(36867);
-                    var dateTaken = _regexPattern.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
-
-                    return DateTime.Parse(dateTaken);
-                }
-            }
-            catch (Exception ex)
-            {
-                //_logService.Error(ex.Message);
-                return null;
-            }
         }
 
         List<string> DirSearch(string sourceDirectory)
